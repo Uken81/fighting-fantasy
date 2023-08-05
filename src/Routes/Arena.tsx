@@ -1,5 +1,6 @@
 import { Goblin } from '../CharactetBuilds/OpponentBuilds/goblin';
 import { PlayerWarrior } from '../CharactetBuilds/PlayerBuilds/warrior';
+import { CombatInterface } from '../Combat/CombatInterface/CombatInteface';
 import { StatsDisplay } from '../Combat/Combatants/StatsDisplay';
 
 export const Arena = () => {
@@ -12,6 +13,7 @@ export const Arena = () => {
         <h1>Arena Page</h1>
       </div>
       <StatsDisplay playerCharacter={playerCharacter} opponent={opponent} />
+      <CombatInterface playerCharacter={playerCharacter} opponent={opponent} />
     </div>
   );
 };
