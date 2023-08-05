@@ -5,7 +5,7 @@ export const CombatInterface: React.FC<{ playerCharacter: Combatant; opponent: C
   opponent
 }) => {
   return (
-    <div>
+    <div className="combat-interface">
       <p>{playerCharacter.name}</p>
       <p>{opponent.name}</p>
     </div>

@@ -3,4 +3,5 @@ export interface Combatant {
   attack: number;
   defense: number;
   hp: number;
+  imagePath: string;
 }

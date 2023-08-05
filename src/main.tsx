@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+
 // import App from './App.tsx';
 import {
   createBrowserRouter,
@@ -8,9 +11,8 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import ErrorPage from './Routes/ErrorPage.tsx';
-import './index.css';
 import { Menu } from './Routes/Menu.tsx';
-import { Arena } from './Routes/Arena.tsx';
+import { Arena } from './Routes/Arena/Arena.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
