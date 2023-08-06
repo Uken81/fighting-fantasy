@@ -13,7 +13,11 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   const rollStandard = () => rollDice(3);
 
   const determineCriticalSuccess = (rollValue: number) => rollValue === 18;
-  const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
+  const determineSuccess = (skillLevel: number, rollValue: number) => {
+    // console.log('dS', 'skill ', skillLevel, 'roll ', rollValue);
+    return rollValue <= skillLevel;
+  };
+  //   const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
 
   //would these be better named check****Outcome??
   const determineAttackOutcome = (attacker: Combatant) => {
@@ -21,6 +25,7 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
 
     const isCriticalSuccess = determineCriticalSuccess(attackRoll);
     const isAttackSuccessfull = determineSuccess(attacker.attack, attackRoll);
+    // console.log('isAttackSuccessfull', isAttackSuccessfull);
 
     //Note: Critical success with attack negates defense and applies max damage
     if (isCriticalSuccess) {
@@ -37,10 +42,10 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   //would these be better named check****Outcome??
   const determineDefenseOutcome = (defender: Combatant) => {
     const defenseRoll = rollStandard();
-    console.log('DEF roll ', defenseRoll);
 
     const isDefenseSuccessfull = determineSuccess(defender.defense, defenseRoll);
-    return isDefenseSuccessfull ? 'defender-hit' : 'defender-safe';
+    // console.log('isDefenseSuccessfull', isDefenseSuccessfull);
+    return isDefenseSuccessfull ? 'defender-safe' : 'defender-hit';
   };
 
   //why isnt the attackResult argument implicitly typed?
