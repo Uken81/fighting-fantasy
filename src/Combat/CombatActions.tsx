@@ -1,9 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import { Combatant } from '../globalTypes';
-export const CombatActions: React.FC<{ player: Combatant; opponent: Combatant }> = ({
-  player,
-  opponent
-}) => {
+import { RoundResults } from './CombatInterface/CombatInteface';
+export const CombatActions: React.FC<{
+  player: Combatant;
+  opponent: Combatant;
+  updateLog: any;
+  roundResults: RoundResults;
+}> = ({ player, opponent, updateLog, roundResults }) => {
   let roundAttacker = player;
   let roundDefender = opponent;
 
@@ -80,6 +83,11 @@ export const CombatActions: React.FC<{ player: Combatant; opponent: Combatant }>
     // console.log(`inflicted ${damageInflicted} damage`);
   };
 
+  //   const updateLog = (defenseResult: string, damageInflicted: number) => {
+  //     roundResult.defenseResult = defenseResult;
+  //     roundResult.damageResult = damageInflicted;
+  //   };
+
   const switchAttacker = () => {
     if (roundAttacker === player) {
       roundAttacker = opponent;
@@ -100,19 +108,23 @@ export const CombatActions: React.FC<{ player: Combatant; opponent: Combatant }>
       const damageInflicted = 6;
 
       applyDamage(roundDefender, damageInflicted);
+      updateLog(defenseResult, damageInflicted);
       console.log(`${roundDefender.name} is CRITICALLY HIT for ${damageInflicted} points`);
       console.log(`${roundDefender.name} hp: ${roundDefender.hp}`);
     } else if (defenseResult === 'defender-hit') {
       const damageInflicted = rollDamage();
 
       applyDamage(roundDefender, damageInflicted);
+      updateLog(defenseResult, damageInflicted);
+
       console.log(`${roundDefender.name} is hit for ${damageInflicted} points`);
       console.log(`${roundDefender.name} hp: ${roundDefender.hp}`);
     } else {
+      updateLog(defenseResult);
       console.log(defenseResult);
       console.log('attack fails');
     }
-
+    console.log('roundResult', roundResults);
     switchAttacker();
   };
 
