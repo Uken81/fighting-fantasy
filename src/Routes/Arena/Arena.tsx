@@ -5,7 +5,7 @@ import { StatsDisplay } from '../../Combat/Combatants/StatsDisplay';
 import './arena.css';
 
 export const Arena = () => {
-  const playerCharacter = new PlayerWarrior('warrior', 12, 8, 10);
+  const player = new PlayerWarrior('warrior', 12, 8, 10);
   const opponent = new Goblin(8, 4, 15);
 
   return (
@@ -14,8 +14,8 @@ export const Arena = () => {
         <h1>Arena Page</h1>
       </div>
       <div className="combat-container">
-        <StatsDisplay playerCharacter={playerCharacter} opponent={opponent} />
-        <CombatInterface playerCharacter={playerCharacter} opponent={opponent} />
+        <StatsDisplay player={player} opponent={opponent} />
+        <CombatInterface player={player} opponent={opponent} />
       </div>
     </div>
   );

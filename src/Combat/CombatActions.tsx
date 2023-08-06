@@ -1,9 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import { Combatant } from '../globalTypes';
-export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Combatant }> = ({
-  playerCharacter,
+export const CombatActions: React.FC<{ player: Combatant; opponent: Combatant }> = ({
+  player,
   opponent
 }) => {
+  let roundAttacker = player;
+  let roundDefender = opponent;
+
   const roll1d6 = () => Math.floor(Math.random() * 6) + 1;
   const rollDice = (numberOfDice: number) => {
     const rollArray = new Array(numberOfDice).fill(0);
@@ -13,11 +16,7 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   const rollStandard = () => rollDice(3);
 
   const determineCriticalSuccess = (rollValue: number) => rollValue === 18;
-  const determineSuccess = (skillLevel: number, rollValue: number) => {
-    // console.log('dS', 'skill ', skillLevel, 'roll ', rollValue);
-    return rollValue <= skillLevel;
-  };
-  //   const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
+  const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
 
   //would these be better named check****Outcome??
   const determineAttackOutcome = (attacker: Combatant) => {
@@ -58,7 +57,6 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   };
 
   const runDefense = (attacker: Combatant, defender: Combatant) => {
-    // const attackResult = 'critical-success';
     const attackResult = determineAttackOutcome(attacker);
     if (attackResult === 'critical-success') {
       return 'critical-hit';
@@ -79,32 +77,43 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   };
   const applyDamage = (defender: Combatant, damageInflicted: number) => {
     defender.hp = defender.hp - damageInflicted;
-    console.log(`inflicted ${damageInflicted} damage`);
+    // console.log(`inflicted ${damageInflicted} damage`);
+  };
+
+  const switchAttacker = () => {
+    if (roundAttacker === player) {
+      roundAttacker = opponent;
+      roundDefender = player;
+    } else {
+      roundAttacker = player;
+      roundDefender = opponent;
+    }
   };
 
   const runRound = () => {
-    const attacker: Combatant = playerCharacter;
-    const defender: Combatant = opponent;
-    const defenseResult = runDefense(attacker, defender);
+    // console.log('attacker: ', roundAttacker, 'defender: ', roundDefender.name);
+    const defenseResult = runDefense(roundAttacker, roundDefender);
     console.log('defenseResult', defenseResult);
 
     if (defenseResult === 'critical-hit') {
       //todo: change this when variable weapon damage is added.
       const damageInflicted = 6;
 
-      applyDamage(defender, damageInflicted);
-      console.log(`defender is CRITICALLY HIT for ${damageInflicted} points`);
-      console.log(`defender hp: ${defender.hp}`);
+      applyDamage(roundDefender, damageInflicted);
+      console.log(`${roundDefender.name} is CRITICALLY HIT for ${damageInflicted} points`);
+      console.log(`${roundDefender.name} hp: ${roundDefender.hp}`);
     } else if (defenseResult === 'defender-hit') {
       const damageInflicted = rollDamage();
 
-      applyDamage(defender, damageInflicted);
-      console.log(`defender is hit for ${damageInflicted} points`);
-      console.log(`defender hp: ${defender.hp}`);
+      applyDamage(roundDefender, damageInflicted);
+      console.log(`${roundDefender.name} is hit for ${damageInflicted} points`);
+      console.log(`${roundDefender.name} hp: ${roundDefender.hp}`);
     } else {
       console.log(defenseResult);
       console.log('attack fails');
     }
+
+    switchAttacker();
   };
 
   return (

@@ -1,18 +1,18 @@
 import { Combatant } from '../../globalTypes';
-import { CombatActions } from '../combatActions';
+import { CombatActions } from '../CombatActions';
 
-export const CombatInterface: React.FC<{ playerCharacter: Combatant; opponent: Combatant }> = ({
-  playerCharacter,
+export const CombatInterface: React.FC<{ player: Combatant; opponent: Combatant }> = ({
+  player,
   opponent
 }) => {
   return (
     <div className="combat-interface">
       <div className="result">
-        <p>{playerCharacter.name}</p>
+        <p>{player.name}</p>
         <p>{opponent.name}</p>
       </div>
 
-      <CombatActions playerCharacter={playerCharacter} opponent={opponent} />
+      <CombatActions player={player} opponent={opponent} />
     </div>
   );
 };
