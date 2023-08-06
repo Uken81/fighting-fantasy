@@ -6,7 +6,7 @@ import './arena.css';
 
 export const Arena = () => {
   const playerCharacter = new PlayerWarrior('warrior', 12, 8, 10);
-  const opponent = new Goblin(8, 6, 15);
+  const opponent = new Goblin(8, 4, 15);
 
   return (
     <div className="arena">

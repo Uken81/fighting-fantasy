@@ -4,89 +4,100 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   playerCharacter,
   opponent
 }) => {
-  const playerAttackSkill = playerCharacter.attack;
-  //   const playerDefenseScore = playerCharacter.defense;
-  //   const playerHp = playerCharacter.hp;
-
-  const opponentAttackSkill = opponent.attack;
-  //   const opponentDefenseScore = opponent.defense;
-  //   const opponentHp = opponent.hp;
-
   const roll1d6 = () => Math.floor(Math.random() * 6) + 1;
   const rollDice = (numberOfDice: number) => {
     const rollArray = new Array(numberOfDice).fill(0);
     const result = rollArray.reduce((accumulator: number) => accumulator + roll1d6(), 0);
     return result;
   };
+  const rollStandard = () => rollDice(3);
 
-  const rollAttack = () => rollDice(3);
   const determineCriticalSuccess = (rollValue: number) => rollValue === 18;
   const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
-  const determineAttackOutcome = (combatant: Combatant) => {
-    const attackRoll = rollAttack();
+
+  //would these be better named check****Outcome??
+  const determineAttackOutcome = (attacker: Combatant) => {
+    const attackRoll = rollStandard();
 
     const isCriticalSuccess = determineCriticalSuccess(attackRoll);
+    const isAttackSuccessfull = determineSuccess(attacker.attack, attackRoll);
+
+    //Note: Critical success with attack negates defense and applies max damage
     if (isCriticalSuccess) {
       return 'critical-success';
     }
 
-    const isAttackSuccessfull = determineSuccess(combatant.attack, attackRoll);
-    return isAttackSuccessfull ? 'success' : 'fail';
+    if (isAttackSuccessfull) {
+      return 'success';
+    } else {
+      return 'fail';
+    }
   };
 
-  const rollDefense = (combatant: Combatant) => {
-    const defenseRoll = rollDice(3);
+  //would these be better named check****Outcome??
+  const determineDefenseOutcome = (defender: Combatant) => {
+    const defenseRoll = rollStandard();
+    console.log('DEF roll ', defenseRoll);
 
-    const isDefenseSuccessfull = determineSuccess(combatant.defense, defenseRoll);
-    return isDefenseSuccessfull ? 'success' : 'fail';
+    const isDefenseSuccessfull = determineSuccess(defender.defense, defenseRoll);
+    return isDefenseSuccessfull ? 'defender-hit' : 'defender-safe';
+  };
+
+  //why isnt the attackResult argument implicitly typed?
+  const checkIfDefenseNeeded = (attackResult: 'critical-success' | 'success' | 'fail') => {
+    if (attackResult === 'success') {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const runDefense = (attacker: Combatant, defender: Combatant) => {
+    // const attackResult = 'critical-success';
+    const attackResult = determineAttackOutcome(attacker);
+    if (attackResult === 'critical-success') {
+      return 'critical-hit';
+    }
+
+    const isDefenseNeeded = checkIfDefenseNeeded(attackResult);
+    console.log('attackresult ', attackResult);
+    if (isDefenseNeeded) {
+      return determineDefenseOutcome(defender);
+    }
   };
 
   const rollDamage = () => {
-    const damgeRoll = rollDice(1);
+    //todo: change this when variable weapon damage is added.
+    const damageRoll = rollDice(1);
 
-    return damgeRoll;
+    return damageRoll;
   };
-
-  const makeAttack = (attacker: Combatant, defender: Combatant) => {
-    const attackResult = determineAttackOutcome(attacker);
-    console.log('attackresult ', attackResult);
-    let defenseResult = '';
-    // let damageResult = 0
-    let finalOutcome = '';
-
-    if (attackResult === 'success') {
-      defenseResult = rollDefense(defender);
-    }
-
-    if (defenseResult === 'fail') {
-      finalOutcome = 'success';
-    } else {
-      finalOutcome = 'fail';
-    }
-
-    return finalOutcome;
-    // if (defenseResult === 'fail') {
-    //     damageResult = rollDamage()
-    // }
-  };
-
-  const applyDamage = (defender: Combatant) => {
-    const damageResult = rollDamage();
-    console.log(`damaged for ${damageResult}`);
-
-    defender.hp = defender.hp - damageResult;
+  const applyDamage = (defender: Combatant, damageInflicted: number) => {
+    defender.hp = defender.hp - damageInflicted;
+    console.log(`inflicted ${damageInflicted} damage`);
   };
 
   const runRound = () => {
     const attacker: Combatant = playerCharacter;
     const defender: Combatant = opponent;
-    const attackOutcome = makeAttack(attacker, defender);
+    const defenseResult = runDefense(attacker, defender);
+    console.log('defenseResult', defenseResult);
 
-    if (attackOutcome === 'success') {
-      applyDamage(defender);
-      console.log('attack successful');
+    if (defenseResult === 'critical-hit') {
+      //todo: change this when variable weapon damage is added.
+      const damageInflicted = 6;
+
+      applyDamage(defender, damageInflicted);
+      console.log(`defender is CRITICALLY HIT for ${damageInflicted} points`);
+      console.log(`defender hp: ${defender.hp}`);
+    } else if (defenseResult === 'defender-hit') {
+      const damageInflicted = rollDamage();
+
+      applyDamage(defender, damageInflicted);
+      console.log(`defender is hit for ${damageInflicted} points`);
       console.log(`defender hp: ${defender.hp}`);
     } else {
+      console.log(defenseResult);
       console.log('attack fails');
     }
   };
@@ -94,9 +105,6 @@ export const CombatActions: React.FC<{ playerCharacter: Combatant; opponent: Com
   return (
     <div>
       <Button onClick={runRound}>Attack</Button>
-      <p>
-        {playerAttackSkill} {opponentAttackSkill}
-      </p>
     </div>
   );
 };
