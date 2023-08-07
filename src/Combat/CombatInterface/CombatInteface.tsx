@@ -15,7 +15,10 @@ export interface RoundResults {
 export const CombatInterface: React.FC<{
   player: Combatant;
   opponent: Combatant;
-}> = ({ player, opponent }) => {
+  applyPlayerDamage: (damage: number) => void;
+  applyOpponentDamage: (damage: number) => void;
+}> = ({ player, opponent, applyPlayerDamage, applyOpponentDamage }) => {
+  //Move to RTK slice
   const [roundResults, setRoundResults] = useState<RoundResults>({
     attackerName: '',
     defenderName: '',
@@ -33,6 +36,8 @@ export const CombatInterface: React.FC<{
         opponent={opponent}
         setRoundResults={setRoundResults}
         roundResults={roundResults}
+        applyPlayerDamage={applyPlayerDamage}
+        applyOpponentDamage={applyOpponentDamage}
       />
     </div>
   );

@@ -6,9 +6,16 @@ import { StatsDisplay } from '../../Combat/Combatants/StatsDisplay';
 import './arena.css';
 
 export const Arena = () => {
-  //todo: add setters to change hp!!
-  const [player] = useState(new PlayerWarrior('warrior', 12, 8, 10));
-  const [opponent] = useState(new Goblin(8, 4, 15));
+  const [player, setPlayer] = useState(new PlayerWarrior('warrior', 12, 8, 10));
+  const [opponent, setOpponent] = useState(new Goblin(8, 4, 15));
+
+  //Move the following two functions to slice when RTK implemented.
+  const applyPlayerDamage = (damage: number) => {
+    setPlayer((prevPlayer) => ({ ...prevPlayer, hp: prevPlayer.hp - damage }));
+  };
+  const applyOpponentDamage = (damage: number) => {
+    setOpponent((prevOpponent) => ({ ...prevOpponent, hp: prevOpponent.hp - damage }));
+  };
 
   return (
     <div className="arena">
@@ -17,7 +24,12 @@ export const Arena = () => {
       </div>
       <div className="combat-container">
         <StatsDisplay player={player} opponent={opponent} />
-        <CombatInterface player={player} opponent={opponent} />
+        <CombatInterface
+          player={player}
+          opponent={opponent}
+          applyPlayerDamage={applyPlayerDamage}
+          applyOpponentDamage={applyOpponentDamage}
+        />
       </div>
     </div>
   );

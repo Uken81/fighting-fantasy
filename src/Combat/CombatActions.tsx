@@ -3,31 +3,32 @@ import { Combatant } from '../globalTypes';
 import { RoundResults } from './CombatInterface/CombatInteface';
 import { useEffect, useState } from 'react';
 import { DefenseOutcomes, RollOutcomes } from './combatTypes';
+import { makeDamageRoll, makeStandardRoll } from '../Components/diceRollers';
 
 export const CombatActions: React.FC<{
   player: Combatant;
   opponent: Combatant;
   setRoundResults: (value: RoundResults) => void;
   roundResults: RoundResults;
-}> = ({ player, opponent, setRoundResults, roundResults }) => {
+  applyPlayerDamage: (damage: number) => void;
+  applyOpponentDamage: (damage: number) => void;
+}> = ({
+  player,
+  opponent,
+  setRoundResults,
+  roundResults,
+  applyPlayerDamage,
+  applyOpponentDamage
+}) => {
   const [attacker, setAttacker] = useState(player);
   const [defender, setDefender] = useState(opponent);
-
-  const roll1d6 = () => Math.floor(Math.random() * 6) + 1;
-  const rollDice = (numberOfDice: number) => {
-    const rollArray = new Array(numberOfDice).fill(0);
-    const result = rollArray.reduce((accumulator: number) => accumulator + roll1d6(), 0);
-    return result;
-  };
-  const rollStandard = () => rollDice(3);
 
   const determineCriticalSuccess = (rollValue: number) => rollValue === 18;
   const determineSuccess = (skillLevel: number, rollValue: number) => rollValue <= skillLevel;
 
-  //would these be better named check****Outcome??
   const determineAttackOutcome = (): RollOutcomes => {
     // const attackRoll = 18;
-    const attackRoll = rollStandard();
+    const attackRoll = makeStandardRoll();
 
     const isCriticalSuccess = determineCriticalSuccess(attackRoll);
     //Note: Critical success with attack negates defense and applies max damage
@@ -53,9 +54,8 @@ export const CombatActions: React.FC<{
     }
   };
 
-  //would these be better named check****Outcome??
   const determineDefenseOutcome = (defender: Combatant): DefenseOutcomes => {
-    const defenseRoll = rollStandard();
+    const defenseRoll = makeStandardRoll();
 
     const isDefenseSuccessfull = determineSuccess(defender.defense, defenseRoll);
     // console.log('isDefenseSuccessfull', isDefenseSuccessfull);
@@ -82,12 +82,16 @@ export const CombatActions: React.FC<{
 
   const rollDamage = () => {
     //todo: change this when variable weapon damage is added.
-    const damageRoll = rollDice(1);
+    const damageRoll = makeDamageRoll();
 
     return damageRoll;
   };
   const applyDamage = (damageInflicted: number) => {
-    defender.hp = defender.hp - damageInflicted;
+    if (defender === player) {
+      applyPlayerDamage(damageInflicted);
+    } else {
+      applyOpponentDamage(damageInflicted);
+    }
     // console.log(`inflicted ${damageInflicted} damage`);
   };
 
