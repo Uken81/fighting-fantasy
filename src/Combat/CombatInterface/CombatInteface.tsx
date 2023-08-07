@@ -1,40 +1,37 @@
+import { useState } from 'react';
 import { Combatant } from '../../globalTypes';
 import { CombatActions } from '../CombatActions';
-import { RoundResults } from './RoundResults';
+import { RoundLogger } from './RoundLogger';
+import { DefenseOutcomes, RollOutcomes } from '../combatTypes';
 
 export interface RoundResults {
-  attacker: Combatant | undefined;
-  defender: Combatant | undefined;
-  attackResult: string;
-  defenseResult: string;
-  damageResult: number | undefined;
+  attackerName: string;
+  defenderName: string;
+  attackResult: RollOutcomes;
+  defenseResult: DefenseOutcomes;
+  damageResult: number;
 }
 
-export const CombatInterface: React.FC<{ player: Combatant; opponent: Combatant }> = ({
-  player,
-  opponent
-}) => {
-  const roundResults: RoundResults = {
-    attacker: undefined,
-    defender: undefined,
+export const CombatInterface: React.FC<{
+  player: Combatant;
+  opponent: Combatant;
+}> = ({ player, opponent }) => {
+  const [roundResults, setRoundResults] = useState<RoundResults>({
+    attackerName: '',
+    defenderName: '',
     attackResult: '',
     defenseResult: '',
     damageResult: 0
-  };
-
-  const updateLog = (defenseResult: string, damageInflicted?: number) => {
-    roundResults.defenseResult = defenseResult;
-    roundResults.damageResult = damageInflicted;
-  };
+  });
 
   return (
     <div className="combat-interface">
-      <RoundResults />
+      <RoundLogger roundResults={roundResults} />
 
       <CombatActions
         player={player}
         opponent={opponent}
-        updateLog={updateLog}
+        setRoundResults={setRoundResults}
         roundResults={roundResults}
       />
     </div>

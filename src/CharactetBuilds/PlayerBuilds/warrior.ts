@@ -10,6 +10,6 @@ export class PlayerWarrior {
     this.attack = attack;
     this.defense = defense;
     this.hp = hp;
-    this.imagePath = '../assets/hero.png';
+    this.imagePath = '../../assets/hero.png';
   }
 }
