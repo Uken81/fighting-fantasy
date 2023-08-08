@@ -1,10 +1,10 @@
-import { RoundResults } from './CombatInteface';
+import { RoundResults } from './RoundManager';
 
 export const RoundLogger: React.FC<{ roundResults: RoundResults }> = ({ roundResults }) => {
   const attacker = roundResults.attackerName;
   const defender = roundResults.defenderName;
-  const attackResult = roundResults.attackResult;
-  const defenseResult = roundResults.defenseResult;
+  const attackResult = roundResults.attackOutcome;
+  const defenseResult = roundResults.defenseOutcome;
   const damageInflicted = roundResults.damageResult;
 
   const DisplayAttackLog: React.FC = () => {
@@ -70,7 +70,6 @@ export const RoundLogger: React.FC<{ roundResults: RoundResults }> = ({ roundRes
 
   return (
     <div className="round-results">
-      <h1>It's {attacker}'s Turn To Act</h1>
       <DisplayAttackLog />
       <DisplayDefenseLog />
       <DisplayDamageLog />

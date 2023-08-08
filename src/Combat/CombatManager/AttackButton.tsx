@@ -1,12 +1,13 @@
 import Button from 'react-bootstrap/Button';
-import { Combatant } from '../globalTypes';
-import { RollOutcomes } from './combatTypes';
-import { makeStandardRoll } from '../Components/diceRollers';
-import { determineCriticalSuccess, determineSuccess } from '../Components/successCheckers';
+import { Combatant } from '../../globalTypes';
+import { makeStandardRoll } from '../../Components/diceRollers';
+import { determineCriticalSuccess, determineSuccess } from '../../Components/successCheckers';
 
-export const CombatActions: React.FC<{
+export type AttackOutcomes = 'critical-success' | 'success' | 'fail' | '';
+
+export const AttackButton: React.FC<{
   attacker: Combatant;
-  setAttackOutcome: (value: RollOutcomes) => void;
+  setAttackOutcome: (value: AttackOutcomes) => void;
 }> = ({ attacker, setAttackOutcome }) => {
   const determineAttackOutcome = () => {
     // const attackRoll = 18;
@@ -27,8 +28,6 @@ export const CombatActions: React.FC<{
       setAttackOutcome('fail');
     }
   };
-
-  //why isnt the attackResult argument implicitly typed?
 
   return (
     <div>

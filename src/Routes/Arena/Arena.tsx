@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Goblin } from '../../CharactetBuilds/OpponentBuilds/goblin';
 import { PlayerWarrior } from '../../CharactetBuilds/PlayerBuilds/warrior';
-import { CombatInterface } from '../../Combat/CombatInterface/CombatInteface';
 import { StatsDisplay } from '../../Combat/Combatants/StatsDisplay';
+import { RoundInterface } from '../../Combat/CombatManager/RoundManager';
 import './arena.css';
 
 export const Arena = () => {
@@ -24,7 +24,7 @@ export const Arena = () => {
       </div>
       <div className="combat-container">
         <StatsDisplay player={player} opponent={opponent} />
-        <CombatInterface
+        <RoundInterface
           player={player}
           opponent={opponent}
           applyPlayerDamage={applyPlayerDamage}
