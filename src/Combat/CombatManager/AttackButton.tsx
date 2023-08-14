@@ -2,13 +2,16 @@ import Button from 'react-bootstrap/Button';
 import { Combatant } from '../../globalTypes';
 import { makeStandardRoll } from '../../Components/diceRollers';
 import { determineCriticalSuccess, determineSuccess } from '../../Components/successCheckers';
+import { logAttackOutcome } from '../../features/Slices/roundResultsSlice';
+import { useAppDispatch } from '../../features/reduxHooks';
 
 export type AttackOutcomes = 'critical-success' | 'success' | 'fail' | '';
 
 export const AttackButton: React.FC<{
   attacker: Combatant;
-  setAttackOutcome: (value: AttackOutcomes) => void;
-}> = ({ attacker, setAttackOutcome }) => {
+}> = ({ attacker }) => {
+  const dispatch = useAppDispatch();
+
   const determineAttackOutcome = () => {
     // const attackRoll = 18;
     const attackRoll = makeStandardRoll();
@@ -16,16 +19,17 @@ export const AttackButton: React.FC<{
 
     //Note: Critical success with attack negates defense and applies max damage
     if (isCriticalSuccess) {
-      setAttackOutcome('critical-success');
+      dispatch(logAttackOutcome('critical-success'));
       return;
     }
 
-    const isAttackSuccessfull = determineSuccess(attacker.attack, attackRoll);
+    //remove non null assertion!!!
+    const isAttackSuccessfull = determineSuccess(attacker.attack!, attackRoll);
     // console.log('isAttackSuccessfull', isAttackSuccessfull);
     if (isAttackSuccessfull) {
-      setAttackOutcome('success');
+      dispatch(logAttackOutcome('success'));
     } else {
-      setAttackOutcome('fail');
+      dispatch(logAttackOutcome('fail'));
     }
   };
 

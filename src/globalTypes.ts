@@ -1,7 +1,7 @@
 export interface Combatant {
   name: string;
-  attack: number;
-  defense: number;
-  hp: number;
+  attack: number | null;
+  defense: number | null;
+  hp: number | null;
   imagePath: string;
 }

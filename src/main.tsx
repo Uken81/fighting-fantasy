@@ -13,6 +13,8 @@ import {
 import ErrorPage from './Routes/ErrorPage.tsx';
 import { Menu } from './Routes/Menu.tsx';
 import { Arena } from './Routes/Arena/Arena.tsx';
+import { Provider } from 'react-redux';
+import { store } from './Components/Store/store.ts';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +27,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

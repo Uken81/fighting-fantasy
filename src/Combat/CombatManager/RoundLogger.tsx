@@ -1,11 +1,12 @@
-import { RoundResults } from './RoundManager';
+import { useAppSelector } from '../../features/reduxHooks';
 
-export const RoundLogger: React.FC<{ roundResults: RoundResults }> = ({ roundResults }) => {
-  const attacker = roundResults.attackerName;
-  const defender = roundResults.defenderName;
-  const attackResult = roundResults.attackOutcome;
-  const defenseResult = roundResults.defenseOutcome;
-  const damageInflicted = roundResults.damageResult;
+export const RoundLogger: React.FC = () => {
+  const roundLog = useAppSelector((state) => state.roundResultsSlice);
+  const attacker = roundLog.attackerName;
+  const defender = roundLog.defenderName;
+  const attackResult = roundLog.attackOutcome;
+  const defenseResult = roundLog.defenseOutcome;
+  const damageInflicted = roundLog.damageResult;
 
   const DisplayAttackLog: React.FC = () => {
     let text: React.ReactNode;
