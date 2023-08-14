@@ -7,7 +7,7 @@ import { AttackButton, AttackOutcomes } from './AttackButton';
 import { Button } from 'react-bootstrap';
 
 import { useAppDispatch, useAppSelector } from '../../features/reduxHooks';
-import { logDefenseOutcome } from '../../features/Slices/roundResultsSlice';
+import { logCombatantRoles, logDefenseOutcome } from '../../features/Slices/roundResultsSlice';
 
 export const RoundManager: React.FC<{
   player: Combatant;
@@ -60,7 +60,8 @@ export const RoundManager: React.FC<{
   };
 
   const runRound = () => {
-    // logCombatantRoles({attacker., defenderName})
+    dispatch(logCombatantRoles({ attackerName: attacker.name, defenderName: defender.name }));
+
     const isAttackCritical = attackOutcome === 'critical-success';
     if (isAttackCritical) {
       applyMaxDamage();
@@ -83,12 +84,6 @@ export const RoundManager: React.FC<{
 
     switchAttacker();
   };
-
-  //only for testing purposes, delete when no longer needed.
-  // useEffect(() => {
-  //   console.log('roundResult', roundResults);
-  //   console.log(defender.name, defender.hp);
-  // }, [roundResults]);
 
   return (
     <div>

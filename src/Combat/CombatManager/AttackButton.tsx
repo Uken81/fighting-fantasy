@@ -26,11 +26,7 @@ export const AttackButton: React.FC<{
     //remove non null assertion!!!
     const isAttackSuccessfull = determineSuccess(attacker.attack!, attackRoll);
     // console.log('isAttackSuccessfull', isAttackSuccessfull);
-    if (isAttackSuccessfull) {
-      dispatch(logAttackOutcome('success'));
-    } else {
-      dispatch(logAttackOutcome('fail'));
-    }
+    dispatch(logAttackOutcome(isAttackSuccessfull ? 'success' : 'fail'));
   };
 
   return (
